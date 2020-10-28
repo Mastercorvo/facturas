@@ -12,7 +12,7 @@
 
     grid-template-rows: 100%;
 
-    height: 600px;
+    height: 500px;
 
     padding: 20px;
 
@@ -46,8 +46,6 @@ p,h2{
 
     align-items: center;
 
-    grid-template-rows: 0.2fr 0.2fr 0.4fr 0.2fr;
-
     gap: 20px;
 
 }
@@ -68,7 +66,7 @@ p,h2{
 
 .calculator .main-input .result *{
 
-    font-size: 4em;
+    font-size: 3em;
 
     margin: 0;
 
@@ -98,15 +96,11 @@ p,h2{
 
     align-items: center;
 
+    justify-content: space-evenly;
+
     font-size: 2em;
 
     font-weight: bold;
-
-}
-
-.product > *{
-
-    margin-top: 50px;
 
 }
 
@@ -194,8 +188,6 @@ p,h2{
 
 .pay{
 
-    height: 100%;
-
     width: 100%;
 
     display: grid;
@@ -208,6 +200,8 @@ p,h2{
 
     gap: 20px;
 
+    height: 200px;
+
 }
 
 .pay > input{
@@ -216,7 +210,7 @@ p,h2{
 
     border-radius: 0;
 
-    font-size: 4em;
+    font-size: 3em;
 
     text-indent: 20px;
 
@@ -252,18 +246,18 @@ p,h2{
 
     align-items: center;
 
+    justify-content: space-around;
+
 }
 
 .pay .total .result{
 
-    font-size: 4em;
-
-    margin-top: 10px;
+    font-size: 1.8em;
 
 }
 
 .pay .total .title{
 
-    font-size: 2em;
+    font-size: 1.8em
 
 }
