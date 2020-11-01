@@ -1,0 +1,36 @@
+.login{
+
+    display: flex;
+    flex-direction: column;
+    font-size: 3em;
+    align-items: center;
+
+}
+
+.login > *{
+
+    padding: 20px;
+
+    margin-bottom: 30px;
+
+    width: 60%;
+
+}
+
+.login input{
+
+    font-size: inherit;
+
+}
+
+.login button{
+
+    font-size: inherit;
+
+}
+
+.login > *:last-child{
+
+    margin: 0;
+
+}
