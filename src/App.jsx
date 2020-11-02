@@ -6,25 +6,13 @@ import ProductManager from './ProductManages';
 import BillsManager from './BillsManager';
 import Login from './Login';
 
-const PRODUCTS = [
+const PRODUCTS = new Map([
 
-    {
-        code: '10',
-        name: 'cafe',
-        price: 136,
-    },
-    {
-        code: '11',
-        name: 'arroz',
-        price: 200,
-    },
-    {
-        code: '12',
-        name: 'manzana',
-        price: 50,
-    }
+    ['10',{name:'Cafe',price: 100}],
+    ['11',{name:'Arroz',price: 300}],
+    ['13',{name:'Manzana',price: 50}]
 
-]
+]);
 
 const App = () => {
 

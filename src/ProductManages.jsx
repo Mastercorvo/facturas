@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './product-manager.css';
 
@@ -112,26 +112,21 @@ function ProductItem({ product: PRODUCT , setProducts, products }){
 function ProductManager ({ zone, products, setProducts }){
 
     const [viewProducts, setViewProducts] = useState(products);
-    
+
+    const [isUpdate, setIsUpdate] = useState([]);
+
+    useEffect(()=>{
+
+        setViewProducts([...products])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[isUpdate])
+
     if(zone !== 1) return false;
 
     function codeGenerated(){
 
-        return [1,1,1].map(e=>Math.floor(Math.random()*10)).join``;
-
-    }
-
-    function voidInputHandler(event){
-
-        setTimeout(() => {
-
-            if(!event.target.value && viewProducts !== products)
-
-            setViewProducts(()=>products);
-
-            console.log();
-
-        }, 0);
+        return [1,1,1].map(()=>Math.floor(Math.random()*10)).join``;
 
     }
 
@@ -146,7 +141,8 @@ function ProductManager ({ zone, products, setProducts }){
 
         }
 
-        setProducts(products=>[{ code, name:'', price:'' },...products])
+        setProducts(products=>[{ code, name:'', price:'' },...products]);
+        setViewProducts(products=>[{ code, name:'', price:'' },...products])
 
     }
 
@@ -156,7 +152,11 @@ function ProductManager ({ zone, products, setProducts }){
 
             const value = event.target.value;
 
-            setViewProducts(currentProducts=>{
+            if(!event.target.value && viewProducts !== products){
+
+                setViewProducts(()=>products);
+
+            }else if(event.target.value) setViewProducts(currentProducts=>{
     
                 const products = currentProducts.map(e=>{
     
@@ -184,7 +184,14 @@ function ProductManager ({ zone, products, setProducts }){
     
             });
 
-        });
+        }, 0);
+
+    }
+
+    function updateProductsHandler(value){
+
+        setProducts(value);
+        setIsUpdate([]);
 
     }
 
@@ -195,7 +202,7 @@ function ProductManager ({ zone, products, setProducts }){
                 <input type="text" placeholder="Buscar..." onKeyDown={searchHandler}/>
                 <button onClick={addHandler}>Agregar un Producto</button>
             </div>
-            <main>{viewProducts.map(e=><ProductItem product={e} setProducts={setProducts} products={products} key={e.code} />)}</main>
+            <main>{viewProducts.map(e=><ProductItem product={e} setProducts={updateProductsHandler} products={products} key={e.code} />)}</main>
         </div>
 
     );
