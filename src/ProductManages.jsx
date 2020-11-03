@@ -1,26 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import './product-manager.css';
 
-function ProductItem({ product: PRODUCT , setProducts, products }){
+function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
     const [product, setProduct] = useState({...PRODUCT});
     const [edit, setEdit] = useState(true);
 
     const editHandler = () => setEdit(value=>!value);
 
-    const updateHandler = value => {
+    const updateHandler = ({code, name, price}) => {
 
         editHandler();
 
-        setProducts(products => products.map( e=>{
-
-                if(e.code === PRODUCT.code) return value;
-                    else return e
-
-            })
-
-        );
+        setProducts(products => new Map(products.set(code, { name, price })) );
 
     }
 
@@ -28,13 +21,13 @@ function ProductItem({ product: PRODUCT , setProducts, products }){
 
         for(let field in product) if(!product[field]) return false;
 
-        if(product.code !== PRODUCT.code){
+        if((product.code || CODE) !== CODE){
 
-            if(products.find(e=>e.code === product.code)) return false
+            if(products.has(product.code || CODE)) return false;
         
         }
 
-        updateHandler(product);
+        updateHandler({code: CODE, ...product});
 
     }
 
@@ -50,9 +43,9 @@ function ProductItem({ product: PRODUCT , setProducts, products }){
 
         setProducts(products=>{
 
-            const CODE = edit? PRODUCT.code: product.code;
+            products.delete(CODE)
 
-            return products.filter(e=>e.code !== CODE);
+            return new Map(products)
 
         });
 
@@ -70,19 +63,29 @@ function ProductItem({ product: PRODUCT , setProducts, products }){
     
         const value = element.target.value;
 
-        if(/\d/.test(value)) return false;
-
         setProduct({...product,[field]:value});
 
     }
 
+    function keysControl(e){
+
+        if(edit) return false
+
+        if(e.key === 'Enter'){
+
+            applyHandler()
+
+        }else if(e.key === 'Escape') revertHandler()
+
+    }
+
     return(
-    <div className="product-item">
+    <div className="product-item" onKeyDown={keysControl} tabIndex={1}>
         <div className="data">
             <label>Código:</label>
             <input type="text"
                 disabled={edit} 
-                value={product.code}
+                value={product.code || CODE}
                 onChange={e=>inputChanges(e,'code')} />
             <label>Nombre:</label> 
             <input type="text"
@@ -113,20 +116,9 @@ function ProductManager ({ zone, products, setProducts }){
 
     const [viewProducts, setViewProducts] = useState(products);
 
-    const [isUpdate, setIsUpdate] = useState([]);
-
-    useEffect(()=>{
-
-        setViewProducts([...products])
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[isUpdate])
-
-    if(zone !== 1) return false;
-
     function codeGenerated(){
 
-        return [1,1,1].map(()=>Math.floor(Math.random()*10)).join``;
+        return Math.floor(Math.random()*1000) + '';
 
     }
 
@@ -135,52 +127,62 @@ function ProductManager ({ zone, products, setProducts }){
         let code = codeGenerated();
 
         // eslint-disable-next-line no-loop-func
-        while(products.some(e=> e.code === code)){
+        while(products.has(code)){
 
             code = codeGenerated()
 
         }
 
-        setProducts(products=>[{ code, name:'', price:'' },...products]);
-        setViewProducts(products=>[{ code, name:'', price:'' },...products])
+        setProducts(products=>new Map([[code, {name:'', price:''}], ...products]));
+        setViewProducts(products=>new Map([[code, {name:'', price:''}], ...products]))
 
     }
 
-    function searchHandler(event){
+    async function searchHandler(event){
 
         setTimeout(()=>{
 
-            const value = event.target.value;
+            const input = event.target.value;
 
-            if(!event.target.value && viewProducts !== products){
+            if(!input) return setViewProducts(()=> products);
 
-                setViewProducts(()=>products);
+            setViewProducts(()=>{
 
-            }else if(event.target.value) setViewProducts(currentProducts=>{
-    
-                const products = currentProducts.map(e=>{
-    
-                    let result = e.name.match(value);
-    
-                    if(result) result.data = e;
-    
+                return new Map([...products].map( data =>{
+
+                    const [, value] = data;
+
+                    let result = value.name.match(new RegExp(input,'i'));
+
+                    if(result) result.data = data;
+                        // En el primer sort la Destructuring genera error por que falta
+                        // Un elemento en el indice 0 con la propiedad length
+                        else if(!Object.values(value).every(e=>e)){
+
+                            result = ['']
+                            result.data = data
+
+                        } 
+                    
                     return result;
-    
-                }).filter(e=>e);
-    
-                products.sort((productA,productB)=>{
-    
-                    return productB.length[0] - productA.length[0];
-    
+
                 })
-    
-                products.sort((productA,productB)=>{
-    
-                    return productA.index - productB.index;
-    
+                .filter(e=>e)
+                .sort(([productA],[productB])=> productB.length - productA.length)
+                .sort((productA, productB)=> productA.index - productB.index)
+                .sort(({data: dataA},{data: dataB}) => {
+
+                    const resultA = +!Object.values(dataA[1]).every(e=>e)
+                    const resultB = +!Object.values(dataB[1]).every(e=>e)
+
+                    if(resultA === resultB) return 0
+
+                    if(resultA === 1) return -1
+
+                    return 1
+
                 })
-    
-                return products.map(e=>e.data);
+                .map(e=>e.data))
     
             });
 
@@ -188,12 +190,14 @@ function ProductManager ({ zone, products, setProducts }){
 
     }
 
-    function updateProductsHandler(value){
+    function updateHandler(value){
 
         setProducts(value);
-        setIsUpdate([]);
+        setViewProducts(value)
 
     }
+
+    if(zone !== 1) return false;
 
     return (
 
@@ -202,7 +206,11 @@ function ProductManager ({ zone, products, setProducts }){
                 <input type="text" placeholder="Buscar..." onKeyDown={searchHandler}/>
                 <button onClick={addHandler}>Agregar un Producto</button>
             </div>
-            <main>{viewProducts.map(e=><ProductItem product={e} setProducts={updateProductsHandler} products={products} key={e.code} />)}</main>
+            <main>{
+
+                [...viewProducts].map(([index,value])=><ProductItem product={value} setProducts={updateHandler} products={viewProducts} key={index} code={index} />)
+
+            }</main>
         </div>
 
     );

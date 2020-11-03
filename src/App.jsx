@@ -16,7 +16,7 @@ const PRODUCTS = new Map([
 
 const App = () => {
 
-    const [zone, setZone] = useState(0);
+    const [zone, setZone] = useState(1);
     const [products, setProducts] = useState(PRODUCTS);
 
     return (
