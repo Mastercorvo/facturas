@@ -1,19 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import './product-manager.css';
 
 function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
-    const [product, setProduct] = useState({...PRODUCT});
+    const [product, setProduct] = useState({...PRODUCT, code: CODE});
     const [edit, setEdit] = useState(true);
+    const [activateModal, setActivateModal] = useState(false)
+    const [oldProduct, setOldProduct] = useState(PRODUCT);
 
     const editHandler = () => setEdit(value=>!value);
 
-    const updateHandler = ({code, name, price}) => {
+    // La primera vez que se agrega un elemento viene con los campos
+    // vacíos así que se activa el modo editar. El campo a comprar es
+    // arbitrario. Ya todos vienen vacíos.
+    useEffect(()=>{
+
+        if(!PRODUCT.name) setEdit(false)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const updateHandler = ({code, name, price, count}) => {
 
         editHandler();
 
-        setProducts(products => new Map(products.set(code, { name, price })) );
+        setProducts(products => new Map(products.set(code, { name, price, count})) );
 
     }
 
@@ -24,38 +36,70 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
         if((product.code || CODE) !== CODE){
 
             if(products.has(product.code || CODE)) return false;
-        
+
         }
+
+        setOldProduct({code: CODE, ...PRODUCT})
 
         updateHandler({code: CODE, ...product});
 
     }
 
-    const revertHandler = ()=>{
+    const cancelHandler = ()=>{
 
         editHandler();
 
-        setProduct({...PRODUCT})
+        setProduct({code: CODE, ...PRODUCT})
+
+    }
+
+    function revertHandler(){
+
+        setProduct({code: CODE, ...oldProduct})
+
+        updateHandler({code: CODE, ...oldProduct})
 
     }
 
     const removeHandler = ()=>{
 
-        setProducts(products=>{
-
-            products.delete(CODE)
-
-            return new Map(products)
-
-        });
+        setActivateModal(true)
 
     }
+
+    function yesOrNoDelete(condition){
+
+        if(condition){
+
+            setProducts(products=>{
+
+                products.delete(CODE)
+    
+                return new Map(products)
+    
+            });
+
+            setActivateModal(false)
+
+        }else setActivateModal(false)
+
+    }
+
     const inputChanges = (element, field) => {
     
         const value = element.target.value;
 
-        if(isNaN(value)) return false;
+        if(/\D/.test(value)) return;
+        if(value[0] === '0' && value[1] === '0') return;
+        setProduct({...product, [field]:value});
 
+    }
+    const inputCodeChanges = (element, field) => {
+    
+        const value = element.target.value;
+
+        if(/\D/.test(value)) return;
+        
         setProduct({...product, [field]:value});
 
     }
@@ -75,39 +119,55 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
             applyHandler()
 
-        }else if(e.key === 'Escape') revertHandler()
+        }else if(e.key === 'Escape') cancelHandler()
 
     }
 
     return(
     <div className="product-item" onKeyDown={keysControl} tabIndex={1}>
-        <div className="data">
-            <label>Código:</label>
-            <input type="text"
-                disabled={edit} 
-                value={product.code || CODE}
-                onChange={e=>inputChanges(e,'code')} />
-            <label>Nombre:</label> 
-            <input type="text"
-                disabled={edit} 
-                value={product.name} 
-                onChange={e=>inputStringChanges(e,'name')} />
-            <label>Precio:</label> 
-            <input type="text"
-                disabled={edit} 
-                value={product.price} 
-                onChange={e=>inputChanges(e,'price')}/>
-        </div>
-        <div className="control">
 
-            <button className="edit" onClick={editHandler} hidden={!edit}>Editar</button>
-            <div className="edit-data" style={{ display: edit?'none':'grid' }}>
-                <button onClick={applyHandler}>Aplicar</button>
-                <button onClick={revertHandler}>Revertir</button>
-            </div>
-            <button className="delete" onClick={removeHandler}>Eliminar</button>
+        <div className="modal" style={{display:activateModal?'flex':'none'}}>
+
+            <button onClick={()=>yesOrNoDelete(true)}>Sí, quiero eliminar</button>
+            <button onClick={()=>yesOrNoDelete(false)}>No quiero eliminar</button>
 
         </div>
+
+        <input type="text"
+            disabled={edit} 
+            value={product.code}
+            onChange={e=>inputCodeChanges(e,'code')}
+            className="code"
+            />
+
+        <input type="text"
+            disabled={edit} 
+            value={product.name} 
+            onChange={e=>inputStringChanges(e,'name')} />
+
+
+        <input type="text"
+            disabled={edit} 
+            value={product.price + (edit?' Bs.':'')} 
+            onChange={e=>inputChanges(e,'price')}/>
+
+
+        <input type="text"
+            disabled={edit} 
+            value={product.count} 
+            onChange={e=>inputChanges(e,'count')}/>
+
+        <button className="edit" onClick={editHandler} hidden={!edit}>Editar</button>
+        <div className="edit-data" style={{ display: edit?'none':'grid' }}>
+            <button onClick={applyHandler}>Aplicar</button>
+            <button onClick={revertHandler}>Revertir</button>
+            <button onClick={cancelHandler} className="cancel">Cancelar</button>
+        </div>
+        <button className="delete" onClick={removeHandler}>
+            <div className="trash"></div>
+            Eliminar
+        </button>
+
     </div>
     )
 }
@@ -133,8 +193,8 @@ function ProductManager ({ zone, products, setProducts }){
 
         }
 
-        setProducts(products=>new Map([[code, {name:'', price:''}], ...products]));
-        setViewProducts(products=>new Map([[code, {name:'', price:''}], ...products]))
+        setProducts(products=>new Map([[code, {name:'', price:'', count:''}], ...products]));
+        setViewProducts(products=>new Map([[code, {name:'', price:'', count:''}], ...products]))
 
     }
 
@@ -144,15 +204,23 @@ function ProductManager ({ zone, products, setProducts }){
 
             const input = event.target.value;
 
+            const isNumber = !isNaN(input)
+
             if(!input) return setViewProducts(()=> products);
 
             setViewProducts(()=>{
 
                 return new Map([...products].map( data =>{
 
-                    const [, value] = data;
+                    const [index, value] = data;
 
-                    let result = value.name.match(new RegExp(input,'i'));
+                    let result;
+
+                    if(isNumber){
+
+                        result = index.match(new RegExp(input,'i'));
+
+                    }else result = value.name.match(new RegExp(input,'i'));
 
                     if(result) result.data = data;
                         // En el primer sort la Destructuring genera error por que falta
@@ -197,20 +265,95 @@ function ProductManager ({ zone, products, setProducts }){
 
     }
 
+    const [activateByName, setActivateByName] = useState(true)
+
+    function OrderByName(){
+
+        setActivateByName(value=>!value)
+
+        setViewProducts(products=>{
+
+            return new Map([...products].sort(([,dataA], [,dataB]) => {
+
+                if(activateByName)return dataA.name.localeCompare(dataB.name)
+                    else return dataB.name.localeCompare(dataA.name)
+
+            }))
+
+        })
+
+    }
+
+    const [activateByPrice, setActivateByPrice] = useState(true)
+
+    function OrderByPrice(){
+
+        setActivateByPrice(value=>!value)
+
+        setViewProducts(products=>{
+
+            return new Map([...products].sort(([,dataA], [,dataB]) => {
+
+                if(activateByPrice) return (dataA.price > dataB.price)?-1:1
+                    else return (dataA.price < dataB.price)?-1:1
+
+            }))
+
+        })
+    }
+
+    const [activateByCount, setActivateByCount] = useState(true)
+
+    function OrderByCount(){
+
+        setActivateByCount(value=>!value)
+
+        setViewProducts(products=>{
+
+            return new Map([...products].sort(([,dataA], [,dataB]) => {
+
+                if(activateByCount) return (dataA.count > dataB.count)?-1:1
+                    else return (dataA.count < dataB.count)?-1:1
+
+            }))
+
+        })
+
+    }
+
     if(zone !== 1) return false;
 
     return (
 
         <div className="product-manager-container">
             <div className="main-control">
-                <input type="text" placeholder="Buscar..." onKeyDown={searchHandler}/>
-                <button onClick={addHandler}>Agregar un Producto</button>
+                <div className="input-container">
+                    <div className="lupa"></div>
+                    <input type="text" placeholder="Buscar por Nombre o Código..." onKeyDown={searchHandler} />
+                </div>
+                <button onClick={addHandler}>
+                    <div className="plus"></div>
+                    Agregar un Producto
+                </button>
             </div>
-            <main>{
+            <main>
+                
+                <div className="order-bar">
 
-                [...viewProducts].map(([index,value])=><ProductItem product={value} setProducts={updateHandler} products={viewProducts} key={index} code={index} />)
+                    <p>Código</p>
+                    <p onClick={OrderByName}>Nombre {activateByName?'▼':'▲'} </p>
+                    <p onClick={OrderByPrice}>Precio {activateByPrice?'▼':'▲'} </p>
+                    <p onClick={OrderByCount}>Cantidad {activateByCount?'▼':'▲'} </p>
 
-            }</main>
+                </div>
+                <div className="list-items">
+                {
+
+                    [...viewProducts].map(([index,value])=><ProductItem product={value} setProducts={updateHandler} products={viewProducts} key={index} code={index} />)
+
+                }
+                </div>
+            </main>
         </div>
 
     );

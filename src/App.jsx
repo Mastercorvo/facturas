@@ -8,9 +8,9 @@ import Login from './Login';
 
 const PRODUCTS = new Map([
 
-    ['10',{name:'Cafe',price: 100}],
-    ['11',{name:'Arroz',price: 300}],
-    ['13',{name:'Manzana',price: 50}]
+    ['10',{name:'Cafe',price: 100, count: 12}],
+    ['11',{name:'Arroz',price: 300, count: 2}],
+    ['13',{name:'Manzana',price: 50, count: 3}]
 
 ]);
 
