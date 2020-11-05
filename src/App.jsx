@@ -16,7 +16,8 @@ const PRODUCTS = new Map([
 
 const App = () => {
 
-    const [zone, setZone] = useState(1);
+    const [zone, setZone] = useState(2); 
+    
     const [products, setProducts] = useState(PRODUCTS);
 
     return (
@@ -24,7 +25,7 @@ const App = () => {
             <Header setZone={setZone}/>
             <Login zone={zone} />
             <ProductManager products={products} setProducts={setProducts} zone={zone} />
-            <BillsManager zone={zone} products={products} />
+            <BillsManager zone={zone} products={products} setProducts={setProducts} />
         </>
         )
 

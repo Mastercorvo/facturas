@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import './bills-manager.css';
 
-function BillsManager({zone, products}){
+function BillsManager({zone, products, setProducts}){
 
     const [code, setCode] = useState('');
-    const [count, setCount] = useState('');
+    const [count, setCount] = useState(1);
     const [total, setTotal] = useState(0);
     const [list, setList] = useState([]);
     const [bills, setBills] = useState(225);
+    const [alertCount, setAlertCount] = useState(false)
     const [product, setProduct] = useState({code:'', name:'', price: ''});
 
     const { name: NAME, price: PRICE } = product;
@@ -24,9 +25,47 @@ function BillsManager({zone, products}){
 
     }
 
+    function updateCount(value){
+
+        setProducts(products => {
+
+            return new Map(products.set(code, {...product, count: value}))
+
+        });
+
+        setProduct({...product, count: value})
+
+    }
+
+    function revertHandler(value, index){
+        
+        setAlertCount(false);
+
+        setProduct(product=>({...product, count: product.count + +value}))
+
+        setProducts(products => {
+
+            return new Map(products.set(code, products.get(index).count + +value));
+
+        });
+
+    }
+
     function addHandler(){
 
         if(!count || !PRICE) return false;
+
+        if(count > product.count){
+
+            setAlertCount(true);
+
+            return false;
+
+        }
+
+        const countResult = product.count - count
+
+        updateCount(countResult)
 
         setTotal(total=>total+SUBTOTAL);
 
@@ -44,12 +83,12 @@ function BillsManager({zone, products}){
         setList(list =>
 
             [
-                ...list,         
-                <div className="bill" key={bills}>
+                <div className="bill" key={bills} onClick={()=>revertHandler(count, product.code)}>
                     <p>{count} {NAME} a {PRICE} Bs. Total: {TOTAL} Bs.</p>
                     <p>Fecha: {time}</p>
                     <button onClick={()=>{deleteHandler(bills, SUBTOTAL)}}>Eliminar</button>
-                </div>
+                </div>,
+                ...list
             ]
 
         )
@@ -64,20 +103,23 @@ function BillsManager({zone, products}){
 
         setCode(value);
 
-        const result = products.find(({code})=>code === value);
-
-        if(result) setProduct(result); 
+        if(products.has(value)) setProduct({code:value, ...products.get(value)}); 
             else setProduct({code:'', name:'', price: ''});
 
     }
 
     function countHandler(count){
 
-        const value = count.target.value;
+        setTimeout(()=>{
 
-        if(isNaN(value)) return false;
+            const value = count.target.value;
+    
+            if(isNaN(value)) return false;
+    
+            if(value)setCount(value)
+                else setCount(1)
 
-        setCount(value)
+        }, 0)
 
     }
 
@@ -90,9 +132,20 @@ function BillsManager({zone, products}){
                 <div className="main-input">
             
                     <input type="text" placeholder="Código" value={code} onChange={codeHandler}/>
-                    <input type="text" placeholder="Cantidad: 1" value={count} onChange={countHandler}/>
+                    <input type="text" placeholder="Cantidad: 1" onKeyDown={countHandler}/>
             
                     <div className="result">
+
+                    <div className="modal" style={{display:alertCount?'flex':'none'}} onClick={()=>setAlertCount(false)}>
+
+                        <div className="cross"></div>
+
+                        <p hidden={product.count !== 0}>PRODUCTO AGOTADO</p>
+
+                        <p hidden={product.count === 0}>Solo hay en existencia:</p>
+                        <p hidden={product.count === 0}>{product.count}</p>
+
+                    </div>
             
                         <p>Resultado:</p>
             

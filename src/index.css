@@ -15,6 +15,14 @@ body{
 
 }
 
+*,
+*::before,
+*::after{
+
+    box-sizing: border-box;
+
+}
+
 #root{
 
     width: 100vw;
@@ -32,7 +40,7 @@ input{
 
     border: none;
 
-    border: 3px;
+    border-radius: 50px;
 
     box-shadow: -3px 3px 3px -2px rgb(0, 0, 0);
 
