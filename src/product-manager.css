@@ -338,6 +338,8 @@ main .product-item input{
 
     padding: 5px;
 
+    text-indent: 5px;
+
 }
 
 main .product-item input:disabled{

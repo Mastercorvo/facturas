@@ -34,6 +34,12 @@ body{
 
 }
 
+p{
+
+    width: max-content;
+
+}
+
 input{
 
     outline: none;

@@ -3,7 +3,8 @@ import './app.css';
 
 import Header from './Header';
 import ProductManager from './ProductManages';
-import BillsManager from './BillsManager';
+import FactureManager from './FactureManager';
+import BillsManager from './billsManager';
 import Login from './Login';
 
 const PRODUCTS = new Map([
@@ -17,15 +18,21 @@ const PRODUCTS = new Map([
 const App = () => {
 
     const [zone, setZone] = useState(2); 
-    
     const [products, setProducts] = useState(PRODUCTS);
+    const [bills, setBills] = useState(new Map());
+    const [billHistoryCount, setBillsHistoryCount] = useState(0)
 
     return (
         <>
             <Header setZone={setZone}/>
             <Login zone={zone} />
             <ProductManager products={products} setProducts={setProducts} zone={zone} />
-            <BillsManager zone={zone} products={products} setProducts={setProducts} />
+            <FactureManager zone={zone} products={products} 
+            setProducts={setProducts} 
+            setBills={setBills}
+            setBillsHistoryCount={setBillsHistoryCount}
+            billHistoryCount={billHistoryCount}/>
+            <BillsManager zone={zone} />
         </>
         )
 

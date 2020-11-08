@@ -1,0 +1,318 @@
+
+.facture-manager-container{
+
+    padding: 10px;
+
+}
+
+.calculator{
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    grid-template-rows: 100%;
+
+    height: 400px;
+
+    width: 100%;
+
+    margin-bottom: 40px;
+
+}
+
+.calculator .main-input{
+
+    display: grid;
+
+    justify-items: center;
+
+    align-items: center;
+
+    gap: 20px;
+
+
+}
+
+.calculator .main-input input{
+
+    border: none;
+
+    width: 100%;
+
+    height: 100%;
+
+    font-size: 2em;
+
+    text-indent: 25px;
+
+}
+
+.calculator .main-input .result{
+
+    position: relative;
+
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    flex-direction: column;
+
+}
+
+.calculator .main-input .result .modal{
+
+    position: absolute;
+
+    width: 100%;
+
+    height: 100%;
+
+    backdrop-filter: blur(10px);
+
+    background-color: rgba(0, 0, 0, 0.8);
+
+    border-radius: 3px;
+
+    font-size: 6px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    color: red;
+
+    font-weight: bold;
+
+}
+
+.calculator .main-input .result .modal .cross{
+
+    background-image: url(./img/cross.svg);
+    
+    background-size: 60% 60%;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+
+    width: 40px;
+
+    height: 40px;
+
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    background-color: red;
+
+    border-radius: 50%;
+
+}
+
+.calculator .main-input .result *{
+
+    font-size: 3em;
+
+    margin: 0;
+
+    font-family: 'Libre Baskerville', serif;
+
+}
+
+.calculator .main-input button{
+
+    width: 100%;
+
+    height: 100%;
+
+
+    border: none;
+
+    font-size: 3em;
+
+}
+
+.product{
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: space-evenly;
+
+    font-size: 2em;
+
+    font-weight: bold;
+
+}
+
+.product .container{
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-rows: 0.5fr 0.5fr;
+
+    justify-items: center;
+
+    align-items: center;
+
+}
+
+.product .container .value{
+
+    height: 1em;
+
+}
+
+.history{
+
+    height: 100%;
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-rows: 0.2fr 0.8fr;
+
+    justify-items: center;
+
+    align-items: center;
+
+}
+
+.history .view{
+
+    display: flex;
+
+    align-items: center;
+
+    flex-direction: column;
+
+    width: 100%;
+
+    height: 100%;
+
+    overflow-y: scroll;
+
+    padding-top: 10px;
+
+}
+
+.history .view .bill-history-Item{
+
+    padding: 10px;
+
+    background-color: white;
+
+    margin-bottom: 10px;
+
+    width: 95%;
+
+}
+
+.history .view .bill-history-Item p{
+
+    margin-top: 3px;
+
+}
+
+.history .view .bill-history-Item button{
+
+    margin-top: 10px;
+
+    padding: 5px;
+
+    border: none;
+
+    color: white;
+
+    background-color: black;
+
+}
+
+.pay{
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 20px;
+
+    align-items: center;
+
+}
+
+.pay > input{
+
+    border: none;
+
+    font-size: 3em;
+
+    text-indent: 20px;
+
+    width: 100%;
+
+    height: 100%;
+
+}
+
+.pay .card{
+
+    grid-column: 1/4;
+
+}
+
+.pay .name{
+
+    grid-column: 1/4;
+    grid-row: 2;
+
+}
+
+.pay .facture{
+
+    grid-column: span 3;
+    grid-row: span 2;
+
+    font-size: 3em;
+
+    height: 80%;
+
+}
+
+.pay .total{
+
+    font-family: var(--title);
+
+    grid-column: 7/13;
+
+    display: flex;
+
+    grid-row: span 2;
+
+    justify-content: space-evenly;
+}
+
+.pay .total .title{
+
+    font-size: 1.8em
+
+}
