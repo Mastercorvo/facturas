@@ -13,27 +13,21 @@ function ProductsItemList({list}){
 
         COUNT++
 
+        const subTotal = count*price;
+
         return <div className="item" key={COUNT}><p> <i>{code}</i> - {name} ({count})</p> 
-        <p><strong>{((count*price)*16)/100}</strong> Bs.</p></div>
+        <p><strong>{(subTotal + ((subTotal)*16)/100).toFixed(2)} Bs.</strong></p></div>
 
     })
 
 }
 
-function Bill({userName, userCard, list, total, print}){
-
-    const DATE = new Date();
-
-    let year = `${DATE.getFullYear()}`;
-    let month = `/${DATE.getMonth()}`;
-    let day = `/${DATE.getDate()}`;
-    let hours =` ${'Hora: ' + DATE.getHours()}`;
-    let minutes = `${':' + DATE.getMinutes()}`
-    let seconds = `${':' + DATE.getSeconds()}`;
-    let time = year + month + day + hours + minutes + seconds;
+function Bill({userName, userCard, list, total, print, billHistoryCount, time, setPrint}){
 
     return (
-    <div className="bill" style={{display:print?'flex':'none'}}>
+    <div className="bill-print" style={{display:print?'flex':'none'}}>
+
+        <div className="cross" onClick={()=> setPrint(false)}></div>
 
         <div>
             <div className="data-company">
@@ -59,11 +53,11 @@ function Bill({userName, userCard, list, total, print}){
 
                 <h4>FACTURA</h4>
                 <div className="keys">
-                    <p>Factura:</p>
+                <p>Factura:</p>
                     <p>Fecha:</p>
                 </div>
                 <div className="values">
-                    <p>Ejemplo</p>
+                    <p>{billHistoryCount}</p>
                     <p>{time}</p>
                 </div>
             </div>
@@ -71,10 +65,8 @@ function Bill({userName, userCard, list, total, print}){
             <div className="products"><ProductsItemList list={list}/></div>
 
             <div className="result">
-
-                <p>Total: </p>
-                <p>tarjeta de débito</p>
-
+                <div className="container"><p>Total</p> <p><strong>{(total+((total*16)/100)).toFixed(2)} Bs.</strong></p></div>
+                <div className="container"><p>Tarj. Débito</p> <p><strong>{(total+((total*16)/100)).toFixed(2)} Bs.</strong></p></div>
             </div>
 
         </div>

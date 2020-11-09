@@ -45,6 +45,7 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
     const [alertCount, setAlertCount] = useState(false);
     const [print, setPrint] = useState(false);
     const [product, setProduct] = useState({code:'', name:'', price: ''});
+    const [TIME, SET_TIME] = useState(undefined);
 
     // Current Product
     const SUBTOTAL = product.price * count;
@@ -107,7 +108,7 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
         if(findProduct){
 
-            const {props:{ count: COUNT } } = findProduct
+            const { props: { count: COUNT } } = findProduct
 
             setList(list => new Map(list.set(product.name, BILL_GENERATOR(+COUNT + +count))))
         
@@ -147,25 +148,35 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
     function factureHandler(){
 
+        if(!userCard || !userName) return false;
+        if(![...list][0]) return false;
+        
         setPrint(true)
+        setBillsHistoryCount(count=>++count);
 
-        // if(!userCard || !userName) return false;
-        // if(!list[0]) return false;
+        const DATE = new Date();
 
-        // setBillsHistoryCount(count=>++count);
+        let year = `${DATE.getFullYear()}`;
+        let month = `/${DATE.getMonth()}`;
+        let day = `/${DATE.getDate()}`;
+        let hours =` ${'Hora: ' + DATE.getHours()}`;
+        let minutes = `${':' + DATE.getMinutes()}`
+        let seconds = `${':' + DATE.getSeconds()}`;
+        let time = year + month + day + hours + minutes + seconds;
 
-        // setBills(bills=>{
+        SET_TIME(time);
 
-        //     bills.set(billHistoryCount,{
+        setBills(bills=>{
 
-        //         list,
-        //         total,
-        //         userName,
-        //         userCard,
-        //         date: new Date()
-        //     });
+            return new Map([[billHistoryCount,{
+                list,
+                total,
+                userName,
+                userCard,
+                time
+            }], ...bills]);
 
-        // })
+        })
 
     }
 
@@ -188,7 +199,14 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
     return (
         <div className="facture-manager-container">
-            <Bill userName={userName} userCard={userCard} list={list} total={total} print={print}/>
+            <Bill userName={userName} 
+            userCard={userCard} 
+            list={list} 
+            total={total} 
+            print={print} 
+            billHistoryCount={billHistoryCount}
+            time={TIME}
+            setPrint={setPrint}/>
             <section  className="calculator">
 
                 <div className="main-input">

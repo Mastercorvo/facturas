@@ -144,7 +144,7 @@
 
 }
 
-.product{
+.calculator .product{
 
     display: flex;
 
@@ -160,7 +160,7 @@
 
 }
 
-.product .container{
+.calculator .product .container{
 
     width: 100%;
 
@@ -174,7 +174,7 @@
 
 }
 
-.product .container .value{
+.calculator .product .container .value{
 
     height: 1em;
 

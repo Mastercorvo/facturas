@@ -13,19 +13,14 @@ let PRODUCTS = new Map([
     ['11',{name:'Arroz', price: 300, count: 2}],
     ['13',{name:'Manzana', price: 50, count: 3}]
 
-].map(([index, value])=>{
-
-    return [index, {...value, price: (+value.price).toFixed(2)}]
-
-})
-);
+].map(([index, value])=>[index, {...value, price: (+value.price).toFixed(2)}]));
 
 const App = () => {
 
-    const [zone, setZone] = useState(2); 
+    const [zone, setZone] = useState(3); 
     const [products, setProducts] = useState(PRODUCTS);
     const [bills, setBills] = useState(new Map());
-    const [billHistoryCount, setBillsHistoryCount] = useState(0)
+    const [billHistoryCount, setBillsHistoryCount] = useState(1)
 
     return (
         <>
@@ -37,7 +32,7 @@ const App = () => {
             setBills={setBills}
             setBillsHistoryCount={setBillsHistoryCount}
             billHistoryCount={billHistoryCount}/>
-            <BillsManager zone={zone} />
+            <BillsManager zone={zone} bills={bills} />
         </>
         )
 
