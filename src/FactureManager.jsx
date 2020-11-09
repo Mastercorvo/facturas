@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './facture-manager.css';
 import Bill from './bill';
 
-function BillsListItem({revertHandler, product, setList, count}){
+function BillsListItem({revertHandler, product, setList, count, setTotal}){
 
     function deleteHandler(){
 
@@ -14,15 +14,20 @@ function BillsListItem({revertHandler, product, setList, count}){
         
         });
 
-        revertHandler(count, product.code)
+        revertHandler(count, product.code);
+
+        setTotal(value=>value - (product.price * count));
 
     }
+
+    const subTotal = count * product.price;
+    const total = (subTotal + ((subTotal*16)/100)).toFixed(2)
 
     return (
 
         <div className="bill-history-Item" key={product.name} >
-            <p>{count} {product.name} a {product.price} Bs. Total: {count * product.price} Bs.</p>
-            <button onClick={()=>{deleteHandler()}}>Eliminar</button>
+            <p>{count} {product.name} a {product.price} Bs. Total: {total} Bs.</p>
+            <button onClick={deleteHandler}>Eliminar</button>
         </div>
 
     )
@@ -43,24 +48,7 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
     // Current Product
     const SUBTOTAL = product.price * count;
-    const TOTAL = SUBTOTAL + ((SUBTOTAL*16)/100);
-
-    useEffect(()=>{
-
-        setTotal(()=>{
-
-            return [...list.values()].reduce((sum,{props})=>{
-                
-                const result = props.product.price * count;
-
-                return sum + result || 0;
-            
-            }, 0);
-
-        })
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[list])
+    const TOTAL = (SUBTOTAL + ((SUBTOTAL*16)/100)).toFixed(2);
 
     function updateCount(value){
 
@@ -75,14 +63,16 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
     }
 
     function revertHandler(value, index){
-        
+
         setAlertCount(false);
 
         setProduct(product=>({...product, count: product.count + +value}))
 
         setProducts(products => {
 
-            return new Map(products.set(code, products.get(index).count + +value));
+            const product = products.get(index);
+
+            return new Map(products.set(code, {...product, count: product.count + +value}));
 
         });
 
@@ -108,7 +98,8 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
         list={list} 
         count={count} 
         key={product.name}
-        revertHandler={revertHandler}/>
+        revertHandler={revertHandler}
+        setTotal={setTotal}/>
 
         updateCount(countResult)
 
@@ -120,7 +111,9 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
             setList(list => new Map(list.set(product.name, BILL_GENERATOR(+COUNT + +count))))
         
-        }else setList(list => new Map([[product.name, BILL_GENERATOR(count)], ...list]))
+        }else setList(list => new Map([[product.name, BILL_GENERATOR(count)], ...list]));
+
+        setTotal(value=> value + (product.price * count));
 
     }
 
@@ -230,7 +223,7 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
                     <h2>Producto/s</h2>
 
                     <div className="container"> Nombre <br/> <p className="value">{product.name}</p></div>
-                    <div className="container"> Precio <br/> <p className="value">{product.price}</p></div>
+                    <div className="container"> Precio <br/> <p className="value">{product.price + (product.price?' Bs.':'')}</p></div>
 
                 </div>
 
@@ -252,8 +245,8 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
                 <div className="total">
                     
-                    <h2 className="title">Sub Total<br/>{total} Bs.</h2>
-                    <h2 className="title">Total (+IVA 16%)<br/>{total + ((total*16)/100)} Bs.</h2>
+                    <h2 className="title">Sub Total<br/>{(total).toFixed(2)} Bs.</h2>
+                    <h2 className="title">Total (+IVA 16%)<br/>{(total + ((total*16)/100)).toFixed(2)} Bs.</h2>
                     
                 </div>
 

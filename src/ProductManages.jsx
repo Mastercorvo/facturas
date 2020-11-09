@@ -26,17 +26,29 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         editHandler();
 
-        setProducts(products => new Map(products.set(code, { name, price, count})) );
+        setProducts(products => new Map(products.set(code, {name, price, count:(+count).toFixed(2)})) );
+
+        setProduct(product=>({...product, price: (+product.price).toFixed(2)}))
 
     }
 
     const applyHandler = () => {
 
-        for(let field in product) if(!product[field]) return false;
+        for(let field in product) if(!product[field]) return;
 
         if((product.code || CODE) !== CODE){
 
-            if(products.has(product.code || CODE)) return false;
+            alert('Código del Producto YA Registrado')
+
+            if(products.has(product.code || CODE)) return;
+
+        }
+
+        if(product.name && [...products.value()].find(({name})=>name === product.name)){
+
+            alert('Nombre del Producto Ya Registrado')
+
+            return;
 
         }
 
@@ -86,31 +98,33 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
     }
 
-    const inputChanges = (element, field) => {
+    const inputCountHandler = event => {
     
-        const value = element.target.value;
+        const value = event.target.value;
 
         if(/\D/.test(value)) return;
         if(value[0] === '0' && value[1] === '0') return;
-        setProduct({...product, [field]:value});
+
+        setProduct({...product, count :value});
         return true
 
     }
-    const inputCodeChanges = (element, field) => {
+    const inputCodeChanges = event => {
     
-        const value = element.target.value;
+        const value = event.target.value;
 
         if(/\D/.test(value)) return;
-        
-        setProduct({...product, [field]:value});
+        if(value > Number.MAX_SAFE_INTEGER) return;
+
+        setProduct({...product, code: value});
         return true
 
     }
-    const inputStringChanges = (element, field) => {
+    const inputStringChanges = event => {
     
-        const value = element.target.value;
+        const value = event.target.value;
 
-        setProduct({...product,[field]:value});
+        setProduct({...product, name :value});
         return true
 
     }
@@ -118,13 +132,14 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
     function inputPriceHandler({target}){
 
         const value = target.value;
+
         if(isNaN(value)) return;
         if(value[0] === '0' && value[1] === '0') return;
         if(value[0] === '+') return;
         if(value < 0) return;
+        if(value > Number.MAX_SAFE_INTEGER) return;
 
         setProduct({...product, price: value});
-
         return true
     }
 
@@ -150,17 +165,17 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         </div>
 
-        <InputSup type="text"
+        <InputSup
             disabled={edit} 
             value={product.code}
-            onChange={e=>inputCodeChanges(e,'code')}
+            onChange={inputCodeChanges}
             className="code"
             />
 
-        <InputSup type="text"
+        <InputSup
             disabled={edit} 
             value={product.name} 
-            onChange={e=>inputStringChanges(e,'name')} />
+            onChange={inputStringChanges} />
 
 
         <InputSup
@@ -169,10 +184,10 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
             onChange={inputPriceHandler} />
 
 
-        <InputSup type="text"
+        <InputSup
             disabled={edit} 
             value={product.count} 
-            onChange={e=>inputChanges(e,'count')}/>
+            onChange={inputCountHandler}/>
 
         <button className="edit" onClick={editHandler} hidden={!edit}>Editar</button>
         <div className="edit-data" style={{ display: edit?'none':'grid' }}>
