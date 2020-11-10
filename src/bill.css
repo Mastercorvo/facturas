@@ -41,9 +41,39 @@
 
     background-position: center;
 
-    height: 60px;
+    height: 80px;
 
-    width: 60px;
+    width: 80px;
+
+    border: none;
+
+    border-radius: 3px;
+
+    cursor: pointer;
+
+}
+
+.bill-print .check-mark{
+
+    position: absolute;
+
+    top: 50px;
+
+    left: 50px;
+
+    background-image: url(./img/check-mark.svg);
+
+    background-size: 80% 80%;
+
+    background-color: green;
+
+    background-repeat: no-repeat;
+
+    background-position: center;
+
+    height: 80px;
+
+    width: 80px;
 
     border: none;
 

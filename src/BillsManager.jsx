@@ -1,7 +1,12 @@
 
 import './bills-manager.css';
 
-function BillsHistoryListItem({bill: [index, { list, total, userName, userCard, time }]}){
+import Bill from './bill';
+import { useState } from 'react';
+
+function BillsHistoryListItem({bill: [index, value], printHandler}){
+
+    const { list, total, userName, userCard, time } = value 
 
     const listResult = [...list].map(([index, {props}]) => {
 
@@ -12,7 +17,7 @@ function BillsHistoryListItem({bill: [index, { list, total, userName, userCard, 
         const total = (subTotal + ((subTotal*16)/100)).toFixed(2);
 
         return (
-        <div className="product">
+        <div className="product" key={product.name}>
 
             <p>{product.code} - {index} {product.price} ({count})</p>
             <p><strong>{total} Bs.</strong></p>
@@ -23,6 +28,8 @@ function BillsHistoryListItem({bill: [index, { list, total, userName, userCard, 
 
     return (
     <div className="bill" key={index}>
+
+        <div className="print" onClick={()=>printHandler({...value, billHistoryCount: index})}></div>
 
         <div className="top">
 
@@ -43,7 +50,7 @@ function BillsHistoryListItem({bill: [index, { list, total, userName, userCard, 
         <div className="bottom">
 
             <p>Total:</p>
-            <p><strong>{((total*16)/100).toFixed(2)}</strong></p>
+            <p><strong>{(total + ((total*16)/100)).toFixed(2)}</strong></p>
 
         </div>
 
@@ -53,12 +60,24 @@ function BillsHistoryListItem({bill: [index, { list, total, userName, userCard, 
 
 function BillsManger({zone, bills}){
 
+    const [billData, setBillData] = useState({});
+    const [print, setPrint] = useState(false);
+
+    function printHandler(data){
+
+        setBillData(data);
+        setPrint(true);
+
+    }
+
     if(zone !== 3) return false;
 
     return (
         <div className="bills-manager-container">
 
-            {[...bills].map(bill=><BillsHistoryListItem bill={bill}/>)}
+            {print && <Bill print={print} setPrint={setPrint} {...billData}/>}
+
+            {[...bills].map(bill=><BillsHistoryListItem bill={bill} key={bill[0]} printHandler={printHandler}/>)}
 
         </div>)
 

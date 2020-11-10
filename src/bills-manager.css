@@ -26,6 +26,30 @@
 
     gap: 15px;
 
+    position: relative;
+
+}
+
+.bills-manager-container .bill .print{
+
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    width: 50px;
+    height: 50px;
+
+    background-image: url(./img/print.svg);
+
+    border-radius: 4px;
+
+    background-size: 100% 100%;
+
+    cursor: pointer;
+
+    background-color: black;
+
 }
 
 .bills-manager-container .bill .top{

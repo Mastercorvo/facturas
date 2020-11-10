@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import './facture-manager.css';
 import Bill from './bill';
+import { InputSup } from './global/elements';
 
 function BillsListItem({revertHandler, product, setList, count, setTotal}){
 
@@ -46,10 +47,23 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
     const [print, setPrint] = useState(false);
     const [product, setProduct] = useState({code:'', name:'', price: ''});
     const [TIME, SET_TIME] = useState(undefined);
+    const refSetTime = useRef(undefined);
 
     // Current Product
     const SUBTOTAL = product.price * count;
     const TOTAL = (SUBTOTAL + ((SUBTOTAL*16)/100)).toFixed(2);
+
+    useLayoutEffect(()=>{
+
+        if(refSetTime.current){
+
+            refSetTime.current()
+
+            refSetTime.current = undefined;
+
+        }
+
+    });
 
     function updateCount(value){
 
@@ -122,27 +136,30 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
         const value = element.target.value;
 
-        if(isNaN(value)) return false;
+        if(/\D/.test(value)) return false;
 
         setCode(value);
 
         if(products.has(value)) setProduct({code: value, ...products.get(value)}); 
             else setProduct({code:'', name:'', price: ''});
 
+        return true;
+
     }
 
     function countHandler(count){
 
-        setTimeout(()=>{
+        const value = count.target.value;
 
-            const value = count.target.value;
-    
-            if(isNaN(value)) return false;
-    
-            if(value)setCount(value)
-                else setCount(1)
+        if(/\D/.test(value)) return false;
+        if(value[0] === '0' || value[1] === '0') return false;
+        if(value > Number.MAX_SAFE_INTEGER) return false;
+        if((value * product.price) > Number.MAX_SAFE_INTEGER) return false;
 
-        }, 0)
+        if(value)setCount(value)
+            else setCount(1)
+
+        return true
 
     }
 
@@ -152,7 +169,6 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
         if(![...list][0]) return false;
         
         setPrint(true)
-        setBillsHistoryCount(count=>++count);
 
         const DATE = new Date();
 
@@ -164,7 +180,32 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
         let seconds = `${':' + DATE.getSeconds()}`;
         let time = year + month + day + hours + minutes + seconds;
 
-        SET_TIME(time);
+        refSetTime.current = SET_TIME(time);
+
+    }
+
+    function RESET(revert = true){
+
+        setAlertCount(false);
+        revert && [...list].forEach(([index, { props: { count, product } }])=>{
+
+            revertHandler(count, product.code)
+
+        })
+        setList(new Map());
+        setCode('');
+        setCount('');
+        setUserCard('');
+        setUserName('');
+        setTotal(0);
+        SET_TIME(undefined);
+        setProduct({code:'', name:'', price: ''})
+
+    }
+
+    function facture(){
+
+        setBillsHistoryCount(count=>++count);
 
         setBills(bills=>{
 
@@ -173,10 +214,12 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
                 total,
                 userName,
                 userCard,
-                time
+                time: TIME
             }], ...bills]);
 
-        })
+        });
+
+        RESET(false);
 
     }
 
@@ -184,7 +227,10 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
         const value = event.target.value;
 
+        if(/\D/.test(value)) return false;
+
         setUserCard(value);
+        return true;
 
     }
     function userNameHandler(event){
@@ -192,6 +238,7 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
         const value = event.target.value;
 
         setUserName(value);
+        return true;
 
     }
 
@@ -199,6 +246,7 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
     return (
         <div className="facture-manager-container">
+            <div className="reset" onClick={RESET}></div>
             <Bill userName={userName} 
             userCard={userCard} 
             list={list} 
@@ -206,13 +254,14 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
             print={print} 
             billHistoryCount={billHistoryCount}
             time={TIME}
-            setPrint={setPrint}/>
+            setPrint={setPrint}
+            facture={facture}/>
             <section  className="calculator">
 
                 <div className="main-input">
             
-                    <input type="text" placeholder="Código" value={code} onChange={codeHandler}/>
-                    <input type="text" placeholder="Cantidad: 1" onKeyDown={countHandler}/>
+                    <InputSup placeholder="Código" value={code} onChange={codeHandler}/>
+                    <InputSup placeholder="Cantidad: 1" value={count===1?'':count} onChange={countHandler}/>
             
                     <div className="result">
 
@@ -256,8 +305,8 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
             <section className="pay">
 
-                <input type="text" placeholder="Cedula" className="card" onChange={userCardHandler}/>
-                <input type="text" placeholder="Nombre" className="name" onChange={userNameHandler}/>
+                <InputSup placeholder="Cedula" className="card" value={userCard} onChange={userCardHandler}/>
+                <InputSup placeholder="Nombre" className="name" value={userName} onChange={userNameHandler}/>
 
                 <button className="facture" onClick={factureHandler}>Facturar</button>
 

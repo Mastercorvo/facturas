@@ -22,7 +22,7 @@ function InputSup(PROPS){
     },[update])
 
     if(onChange) functionsChanges.onChange = onChangeHandler;
-    else if(onKeyDown) functionsChanges.onkeydown = onKeyDownHandler;
+    else if(onKeyDown) functionsChanges.onKeyDown = onKeyDownHandler;
 
     function onChangeHandler(event){
 
@@ -39,7 +39,18 @@ function InputSup(PROPS){
 
     }
 
-    function onKeyDownHandler(){
+    function onKeyDownHandler(event){
+
+        if(onKeyDown && !onKeyDown(event)){
+
+            const element = event.target
+            const start = element.selectionStart;
+
+            ref.current = () => element.setSelectionRange(start, start-1)
+
+            setUpdate([]);
+
+        }
 
     }
 

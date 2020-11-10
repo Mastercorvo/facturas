@@ -17,7 +17,7 @@ let PRODUCTS = new Map([
 
 const App = () => {
 
-    const [zone, setZone] = useState(3); 
+    const [zone, setZone] = useState(2); 
     const [products, setProducts] = useState(PRODUCTS);
     const [bills, setBills] = useState(new Map());
     const [billHistoryCount, setBillsHistoryCount] = useState(1)

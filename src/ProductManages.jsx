@@ -26,7 +26,7 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         editHandler();
 
-        setProducts(products => new Map(products.set(code, {name, price, count:(+count).toFixed(2)})) );
+        setProducts(products => new Map(products.set(code, {name, price, count: count})) );
 
         setProduct(product=>({...product, price: (+product.price).toFixed(2)}))
 
@@ -36,6 +36,8 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         for(let field in product) if(!product[field]) return;
 
+        
+
         if((product.code || CODE) !== CODE){
 
             alert('Código del Producto YA Registrado')
@@ -44,11 +46,15 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         }
 
-        if(product.name && [...products.value()].find(({name})=>name === product.name)){
+        if(product.name && product.name !== PRODUCT.name ){
 
-            alert('Nombre del Producto Ya Registrado')
+            if([...products.values()].find(({name})=>new RegExp(name,'i').test(product.name))){
 
-            return;
+                alert('Nombre del Producto Ya Registrado')
+    
+                return;
+
+            }
 
         }
 

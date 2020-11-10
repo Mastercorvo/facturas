@@ -22,12 +22,18 @@ function ProductsItemList({list}){
 
 }
 
-function Bill({userName, userCard, list, total, print, billHistoryCount, time, setPrint}){
+function Bill({userName, userCard, list, total, print, billHistoryCount, time, setPrint, facture}){
 
     return (
     <div className="bill-print" style={{display:print?'flex':'none'}}>
 
         <div className="cross" onClick={()=> setPrint(false)}></div>
+        {facture && <div className="check-mark" onClick={()=> {
+
+            setPrint(false);
+            facture();
+        
+        }}></div>}
 
         <div>
             <div className="data-company">
