@@ -41,7 +41,7 @@ function BillsHistoryListItem({bill: [index, value], printHandler}){
 
         <div className="middle">
             
-            <h3>Factura</h3>
+            <h3>Factura: {index}</h3>
 
             {listResult}
             
@@ -76,6 +76,8 @@ function BillsManger({zone, bills}){
         <div className="bills-manager-container">
 
             {print && <Bill print={print} setPrint={setPrint} {...billData}/>}
+
+            <input type="text" placeholder="Buscar Por Código..." className="search"/>
 
             {[...bills].map(bill=><BillsHistoryListItem bill={bill} key={bill[0]} printHandler={printHandler}/>)}
 

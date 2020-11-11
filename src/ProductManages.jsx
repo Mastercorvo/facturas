@@ -36,7 +36,7 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         for(let field in product) if(!product[field]) return;
 
-        
+        let VALUES = Object.values({...PRODUCT, code: CODE});
 
         if((product.code || CODE) !== CODE){
 
@@ -48,7 +48,7 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         if(product.name && product.name !== PRODUCT.name ){
 
-            if([...products.values()].find(({name})=>new RegExp(name,'i').test(product.name))){
+            if([...products.values()].find(({name})=>new RegExp(product.name,'i').test(name))){
 
                 alert('Nombre del Producto Ya Registrado')
     
@@ -58,9 +58,13 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         }
 
-        setOldProduct({code: CODE, ...PRODUCT})
+        if(!Object.values(product).every((e,i)=>e === VALUES[i])){
 
-        updateHandler({code: CODE, ...product});
+            setOldProduct({code: CODE, ...PRODUCT})
+    
+            updateHandler({code: CODE, ...product});
+
+        }else editHandler();
 
     }
 
