@@ -1,24 +1,26 @@
 {
   "files": {
-    "main.css": "./static/css/main.560bcb76.chunk.css",
-    "main.js": "./static/js/main.e103d11a.chunk.js",
-    "main.js.map": "./static/js/main.e103d11a.chunk.js.map",
-    "runtime-main.js": "./static/js/runtime-main.5d1df155.js",
-    "runtime-main.js.map": "./static/js/runtime-main.5d1df155.js.map",
-    "static/js/2.2c0415be.chunk.js": "./static/js/2.2c0415be.chunk.js",
-    "static/js/2.2c0415be.chunk.js.map": "./static/js/2.2c0415be.chunk.js.map",
-    "static/js/3.07eae364.chunk.js": "./static/js/3.07eae364.chunk.js",
-    "static/js/3.07eae364.chunk.js.map": "./static/js/3.07eae364.chunk.js.map",
+    "main.css": "./static/css/main.bce8724e.chunk.css",
+    "main.js": "./static/js/main.c3daf0f2.chunk.js",
+    "main.js.map": "./static/js/main.c3daf0f2.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.417ed9e3.js",
+    "runtime-main.js.map": "./static/js/runtime-main.417ed9e3.js.map",
+    "static/js/2.fc3effa1.chunk.js": "./static/js/2.fc3effa1.chunk.js",
+    "static/js/2.fc3effa1.chunk.js.map": "./static/js/2.fc3effa1.chunk.js.map",
+    "static/js/3.9cc3657d.chunk.js": "./static/js/3.9cc3657d.chunk.js",
+    "static/js/3.9cc3657d.chunk.js.map": "./static/js/3.9cc3657d.chunk.js.map",
     "index.html": "./index.html",
-    "static/css/main.560bcb76.chunk.css.map": "./static/css/main.560bcb76.chunk.css.map",
-    "static/js/2.2c0415be.chunk.js.LICENSE.txt": "./static/js/2.2c0415be.chunk.js.LICENSE.txt",
-    "static/media/bills-manager.css": "./static/media/cross.15d52503.svg",
-    "static/media/product-manager.css": "./static/media/trash.19bf067b.svg"
+    "static/css/main.bce8724e.chunk.css.map": "./static/css/main.bce8724e.chunk.css.map",
+    "static/js/2.fc3effa1.chunk.js.LICENSE.txt": "./static/js/2.fc3effa1.chunk.js.LICENSE.txt",
+    "static/media/bill.css": "./static/media/logo.f8fb0362.png",
+    "static/media/product-manager.css": "./static/media/trash.19bf067b.svg",
+    "static/media/bills-manager.css": "./static/media/print.a42f373f.svg",
+    "static/media/facture-manager.css": "./static/media/reset.71e63a61.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.5d1df155.js",
-    "static/js/2.2c0415be.chunk.js",
-    "static/css/main.560bcb76.chunk.css",
-    "static/js/main.e103d11a.chunk.js"
+    "static/js/runtime-main.417ed9e3.js",
+    "static/js/2.fc3effa1.chunk.js",
+    "static/css/main.bce8724e.chunk.css",
+    "static/js/main.c3daf0f2.chunk.js"
   ]
 }
