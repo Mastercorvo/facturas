@@ -33,9 +33,8 @@ function BillsHistoryListItem({bill: [index, value], printHandler}){
 
         <div className="top">
 
-            <p>Nombre: {userName}</p>
-            <p>Cedula: {userCard}</p>
-            <p>Fecha {time}</p>
+            <p className="date">Fecha {time}</p>
+            <p>Nombre: {userName} ----- Cedula: {userCard}</p>
 
         </div>
 

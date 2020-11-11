@@ -79,7 +79,11 @@
 
     display: flex;
 
-    justify-content: space-evenly;
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
 
     font-size: 2em;
 
@@ -89,6 +93,18 @@
 
     padding-left: 100px;
     padding-right: 100px;
+
+}
+
+.bills-manager-container .bill .top > *:first-child{
+
+    margin-bottom: 5px;
+
+}
+
+.bills-manager-container .bill .top > *{
+
+    margin-bottom: 10px;
 
 }
 
