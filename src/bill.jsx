@@ -1,5 +1,4 @@
 
-import { useState } from 'react';
 import './bill.css';
 
 function ProductsItemList({list}){

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './app.css';
 
 import Header from './Header';
@@ -17,10 +17,30 @@ let PRODUCTS = new Map([
 
 const App = () => {
 
+    const GET_PRODUCT = JSON.parse(window.localStorage.getItem('products'));
+    const GET_BILLS = JSON.parse(window.localStorage.getItem('bills'));
+    const GET_billHistoryCount = JSON.parse(window.localStorage.getItem('billHistoryCount'))
+
     const [zone, setZone] = useState(0); 
-    const [products, setProducts] = useState(PRODUCTS);
-    const [bills, setBills] = useState(new Map());
-    const [billHistoryCount, setBillsHistoryCount] = useState(1)
+    const [products, setProducts] = useState(new Map(GET_PRODUCT) || PRODUCTS);
+    const [bills, setBills] = useState(new Map(GET_BILLS) || new Map());
+    const [billHistoryCount, setBillsHistoryCount] = useState(GET_billHistoryCount || 1)
+
+    useEffect(()=>{
+
+        window.localStorage.setItem('bills', JSON.stringify([...bills]));
+
+    },[bills])
+    useEffect(()=>{
+
+        window.localStorage.setItem('products', JSON.stringify([...products]));
+
+    },[products])
+    useEffect(()=>{
+
+        window.localStorage.setItem('billHistoryCount', JSON.stringify(billHistoryCount));
+
+    },[billHistoryCount])
 
     return (
         <>
