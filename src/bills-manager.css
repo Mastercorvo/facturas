@@ -1,3 +1,29 @@
+.bills-manager{
+
+    display: grid;
+
+    grid-template-rows: min-content auto;
+
+    height: 100%;
+
+    justify-items: center;
+
+    overflow: hidden;
+}
+
+.bills-manager .search{
+
+    width: 60%;
+
+    height: 80px;
+
+    text-indent: 1.5em;
+
+    font-size: 2em;
+
+    margin-bottom: 30px;
+
+}
 
 .bills-manager-container{
 
@@ -13,22 +39,11 @@
 
     align-items: center;
 
-}
+    width: 100%;
 
-.bills-manager-container .search{
-
-    width: 60%;
-
-    height: 80px;
-
-    text-indent: 1.5em;
-
-    font-size: 2em;
-
-    margin-bottom: 40px;
+    height: 100%;
 
 }
-
 
 .bills-manager-container .bill{
 

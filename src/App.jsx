@@ -17,15 +17,15 @@ let PRODUCTS = new Map([
 
 const App = () => {
 
-    const [zone, setZone] = useState(1); 
+    const [zone, setZone] = useState(0); 
     const [products, setProducts] = useState(PRODUCTS);
     const [bills, setBills] = useState(new Map());
     const [billHistoryCount, setBillsHistoryCount] = useState(1)
 
     return (
         <>
-            <Header setZone={setZone}/>
-            <Login zone={zone} />
+            {zone !== 0 && <Header setZone={setZone}/>}
+            <Login zone={zone} setZone={setZone} />
             <ProductManager products={products} setProducts={setProducts} zone={zone} />
             <FactureManager zone={zone} products={products} 
             setProducts={setProducts} 

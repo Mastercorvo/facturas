@@ -2,7 +2,8 @@
 import './bills-manager.css';
 
 import Bill from './bill';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { InputSup } from './global/elements';
 
 function BillsHistoryListItem({bill: [index, value], printHandler}){
 
@@ -61,6 +62,14 @@ function BillsManger({zone, bills}){
 
     const [billData, setBillData] = useState({});
     const [print, setPrint] = useState(false);
+    const [inputSearch, setInputSearch] = useState('');
+    const [viewBills, setViewBills] = useState(bills);
+
+    useEffect(()=>{
+
+        setViewBills(bills)
+
+    },[bills])
 
     function printHandler(data){
 
@@ -69,16 +78,45 @@ function BillsManger({zone, bills}){
 
     }
 
+    function searchHandler(event){
+
+        let input = event.target.value;
+        if(/\D/.test(input)) return;
+        if(input === ''){
+
+            setViewBills(bills);
+
+        }else{
+
+            const result = [...bills]
+            .filter(([index,])=>new RegExp(input).test(index))
+            .map(([index, value])=>[(index + '').match(input), [index ,value]])
+            .sort(([a], [b])=>b[0].length - a[0].length)
+            .sort(([{ indexA }], [{ indexB }])=>indexA - indexB)
+            .map(([, data])=>data);
+
+            setViewBills(new Map(result));
+
+        }
+        setInputSearch(input);
+        return true;
+
+    }
+
     if(zone !== 3) return false;
 
     return (
-        <div className="bills-manager-container">
+        <div className="bills-manager">
 
-            {print && <Bill print={print} setPrint={setPrint} {...billData}/>}
+            <InputSup placeholder="Buscar Por Código..." value={inputSearch} onChange={searchHandler} className="search"/>
 
-            <input type="text" placeholder="Buscar Por Código..." className="search"/>
+            <div className="bills-manager-container">
 
-            {[...bills].map(bill=><BillsHistoryListItem bill={bill} key={bill[0]} printHandler={printHandler}/>)}
+                {print && <Bill print={print} setPrint={setPrint} {...billData}/>}
+                {[...viewBills].map(bill=><BillsHistoryListItem bill={bill} key={bill[0]} printHandler={printHandler}/>)}
+
+            </div>
+
 
         </div>)
 
