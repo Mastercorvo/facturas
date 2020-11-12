@@ -37,6 +37,12 @@ function Login({ zone, setZone }) {
 
     }
 
+    function enterHandler(event){
+
+        if(event.key === 'Enter') buttonHandler();
+
+    }
+
     if(zone !== 0) return false;
 
     return(
@@ -49,7 +55,7 @@ function Login({ zone, setZone }) {
 
                     <h1>Iniciar Sesión</h1>
 
-                    <div className="input">
+                    <div className="input" onKeyDown={enterHandler}>
 
                         <input type="text" placeholder="Nombre de Usuario" value={userName} onChange={userNameHandler}/>
                         <input className="password" type="password" placeholder="Contraseña" value={userPassword} onChange={userPasswordHandler}/>
