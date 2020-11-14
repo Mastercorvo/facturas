@@ -82,15 +82,19 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
     const cancelHandler = ()=>{
 
+        for(let field in PRODUCT) if(!PRODUCT[field]) return;
+        
         editHandler();
-
-        console.log(PRODUCT);
 
         setProduct({code: CODE, ...PRODUCT, price: (+PRODUCT.price).toFixed(2)})
 
     }
 
     function revertHandler(){
+
+        for(let field in PRODUCT) if(!PRODUCT[field]) return;
+
+        for(let field in oldProduct) if(!oldProduct[field]) return;
 
         setProduct({code: CODE, ...oldProduct})
 
@@ -204,7 +208,7 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         <InputSup
             disabled={edit} 
-            value={(+product.price).toFixed(2) + (edit?' Bs.':'')} 
+            value={edit?(+product.price).toFixed(2):product.price + (edit?' Bs.':'')} 
             onChange={inputPriceHandler} />
 
 

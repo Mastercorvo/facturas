@@ -86,6 +86,7 @@ button{
 
     font-family: inherit;
 
+    user-select: none;
 
 }
 
