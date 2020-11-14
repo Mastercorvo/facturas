@@ -5,6 +5,14 @@
 
     position: relative;
 
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    flex-direction: column;
+
 }
 
 .facture-manager-container .reset{
@@ -38,7 +46,7 @@
 
     grid-template-rows: 100%;
 
-    height: 400px;
+    height: 350px;
 
     width: 100%;
 
@@ -54,7 +62,7 @@
 
     align-items: center;
 
-    gap: 20px;
+    gap: 10px;
 
 
 }
@@ -148,7 +156,7 @@
 
 .calculator .main-input .result *{
 
-    font-size: 3em;
+    font-size: 2.5em;
 
     margin: 0;
 
@@ -279,7 +287,7 @@
 
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 20px;
+    gap: 15px;
 
     align-items: center;
 
@@ -321,7 +329,7 @@
 
     font-size: 3em;
 
-    height: 80%;
+    height: 85%;
 
 }
 

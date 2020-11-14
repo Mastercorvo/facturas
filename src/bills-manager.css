@@ -9,6 +9,9 @@
     justify-items: center;
 
     overflow: hidden;
+
+    padding-top: 25px;
+
 }
 
 .bills-manager .search{

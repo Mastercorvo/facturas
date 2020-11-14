@@ -10,16 +10,35 @@ header{
 
     box-sizing: border-box;
 
-    gap: 10px;
-
     padding: 10px;
 
-    margin-bottom: 40px;
+    background-color: rgb(24, 11, 133);
+
+    justify-items: center;
+
+    align-items: center;
 
 }
 
 header > *{
 
-    font-size: 1.7em;
+    font-size: 1.4em;
+
+    background-color: transparent;
+
+    color: white;
+
+    padding: 15px;
+
+    padding-left: 25px;
+    padding-right: 25px;
+
+    border-radius: 20px;
+
+    background-color: rgb(36, 16, 219);
+
+    width: max-content;
+
+    height: max-content;
 
 }
