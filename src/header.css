@@ -4,9 +4,9 @@ header{
 
     height: 100px;
 
-    display: grid;
+    display: flex;
 
-    grid-template-columns: repeat(4 ,1fr);
+    justify-content: space-evenly;
 
     box-sizing: border-box;
 

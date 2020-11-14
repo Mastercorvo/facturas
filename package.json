@@ -1,26 +1,37 @@
 {
   "homepage": "./",
-  "name": "web",
-  "version": "0.1.0",
+  "name": "super_app",
+  "author": "Samuel Ramirez",
+  "license": "MIT",
+  "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "gh-pages": "^3.1.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-scripts": "4.0.0",
-    "web-vitals": "^0.2.4"
+  "description": "Sistema de facturacion",
+  "dependencies": {},
+  "main": "public/electron.js",
+  "build":{
+    "appId": "Sistema de Facturacion",
+    "productName": "Sistema de Facturacion",
+    "win":{
+      
+      "target":[
+
+        {
+          "target":"NSIS",
+          "arch":"ia32"
+        }
+
+      ],
+      "icon":"public/fas.ico"
+    }
   },
-  "main": "src/electron-starter.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
-    "electron": "electron ."
+    "electron": "electron .",
+    "win_pack": "electron-builder"
   },
   "eslintConfig": {
     "extends": [
@@ -41,6 +52,15 @@
     ]
   },
   "devDependencies": {
-    "electron": "^10.1.5"
+    "electron": "^10.1.5",
+    "electron-builder": "^22.9.1",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "gh-pages": "^3.1.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.0",
+    "web-vitals": "^0.2.4"
   }
 }
