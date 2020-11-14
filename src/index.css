@@ -1,17 +1,35 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&display=swap');
+@font-face {
+
+    font-family: 'Title';
+
+    src: url(./fonts/Redwing-Medium.otf);
+
+}
+@font-face {
+
+    font-family: 'Cairo';
+
+    src: url(./fonts/Cairo-Regular.ttf);
+
+}
 
 body{
 
     margin: 0;
 
-    font-family: Roboto;
+    font-family: 'Cairo', sans-serif;
 
-    --title: 'Libre Baskerville', serif;
+    --title: 'Title', serif;
 
     background-color: #08AEEA;
     background-image: linear-gradient(0deg, #08AEEA 0%, #2AF598 100%);
+
+}
+
+h1,h2,h3,h4{
+
+    font-family: var(--title);
 
 }
 
@@ -50,11 +68,7 @@ input{
 
     box-shadow: -3px 3px 3px -2px rgb(0, 0, 0);
 
-}
-
-h2{
-
-    font-family: var(--title);
+    font-family: inherit;
 
 }
 
@@ -69,6 +83,9 @@ button{
     cursor: pointer;
 
     box-shadow: -3px 3px 3px -2px rgb(0, 0, 0);
+
+    font-family: inherit;
+
 
 }
 

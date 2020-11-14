@@ -33,7 +33,9 @@ function Login({ zone, setZone }) {
 
         if(result !== userPassword) return;
 
-        setZone(1)
+        setUserName('');
+        setUserPassword('');
+        setZone(1);
 
     }
 
