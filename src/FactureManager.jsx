@@ -97,7 +97,9 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
         if(!count || !product.price) return false;
 
-        if(count > product.count){
+        if(+count > +product.count){
+
+            console.log(typeof count, typeof product.count);
 
             setAlertCount(true);
 
@@ -152,7 +154,7 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
         const value = count.target.value;
 
         if(/\D/.test(value)) return false;
-        if(value[0] === '0' || value[1] === '0') return false;
+        if(value[0] === '0' || (value[0] === '0' && value[1] === '0')) return false;
         if(value > Number.MAX_SAFE_INTEGER) return false;
         if((value * product.price) > Number.MAX_SAFE_INTEGER) return false;
 

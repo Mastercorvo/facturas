@@ -22,11 +22,21 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const updateHandler = ({code, name, price, count}) => {
+    const updateHandler = ({codeI,code, name, price, count}) => {
 
         editHandler();
 
-        setProducts(products => new Map(products.set(code, {name, price, count: count})) );
+        setProducts(products=>{
+
+            const result = new Map([...products])
+
+            result.delete(codeI);
+
+            return result;
+
+        })
+
+        setProducts(products => new Map([[code, {name, price, count: count}], ...products]));
 
         setProduct(product=>({...product, price: (+product.price).toFixed(2)}))
 
@@ -38,11 +48,13 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         let VALUES = Object.values({...PRODUCT, code: CODE});
 
-        if((product.code || CODE) !== CODE){
+        if( (product.code !== CODE) && products.has(product.code)){
 
-            alert('Código del Producto YA Registrado')
+            console.log(product);
 
-            if(products.has(product.code || CODE)) return;
+            alert('Código del Producto YA Registrado');
+
+            return;
 
         }
 
@@ -51,18 +63,18 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
             if([...products.values()].find(({name})=>new RegExp(product.name,'i').test(name))){
 
                 alert('Nombre del Producto Ya Registrado')
-    
+
                 return;
 
             }
 
         }
 
-        if(!Object.values(product).every((e,i)=>e === VALUES[i])){
+        if(!Object.values(product).every((e, i)=>e === VALUES[i])){
 
             setOldProduct({code: CODE, ...PRODUCT})
     
-            updateHandler({code: CODE, ...product});
+            updateHandler({codeI: CODE, ...product});
 
         }else editHandler();
 
@@ -72,7 +84,9 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         editHandler();
 
-        setProduct({code: CODE, ...PRODUCT})
+        console.log(PRODUCT);
+
+        setProduct({code: CODE, ...PRODUCT, price: (+PRODUCT.price).toFixed(2)})
 
     }
 
@@ -190,7 +204,7 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         <InputSup
             disabled={edit} 
-            value={product.price + (edit?' Bs.':'')} 
+            value={(+product.price).toFixed(2) + (edit?' Bs.':'')} 
             onChange={inputPriceHandler} />
 
 
@@ -363,6 +377,12 @@ function ProductManager ({ zone, products, setProducts }){
 
     }
 
+    function prueba(){
+
+        console.log(products);
+
+    }
+
     if(zone !== 1) return false;
 
     return (
@@ -371,7 +391,8 @@ function ProductManager ({ zone, products, setProducts }){
             <div className="main-control">
                 <div className="input-container">
                     <div className="lupa"></div>
-                    <input type="text" placeholder="Buscar por Nombre o Código..." onKeyDown={searchHandler} />
+                    <input type="text" placeholder="Buscar por Nombre o Código..." onKeyDown={searchHandler} 
+                    onClick={prueba}/>
                 </div>
                 <button onClick={addHandler}>
                     <div className="plus"></div>

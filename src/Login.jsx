@@ -29,9 +29,11 @@ function Login({ zone, setZone }) {
 
         let result = Users.get(userName);
 
+        console.log(userPassword);
         if(!result) return;
 
-        if(result !== userPassword) return;
+        if(result !== userPassword.trim()) return;
+
 
         setUserName('');
         setUserPassword('');

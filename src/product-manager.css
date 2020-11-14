@@ -201,6 +201,8 @@ main .product-item{
 
     width: 100%;
 
+    height: max-content;
+
     background-color: rgba(0, 0, 0, 0.5);
 
     padding: 5px;
@@ -327,7 +329,7 @@ main .product-item .edit-data{
 
     gap: 5px;
 
-    font-size: 13px;
+    font-size: 10px;
 
 }
 
@@ -347,7 +349,7 @@ main .product-item input{
 
     padding: 5px;
 
-    text-indent: 5px;
+    text-indent: 1em;
 
 }
 
