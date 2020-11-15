@@ -5,7 +5,7 @@ function ProductsItemList({list}){
 
     let COUNT = 0;
 
-    return [...list.values()].map(({props})=>{
+    return Object.values(list).map(({props})=>{
 
         const { product, count } = props;
         const { code, name, price } = product;

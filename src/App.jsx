@@ -15,6 +15,12 @@ let PRODUCTS = new Map([
 
 ].map(([index, value])=>[index, {...value, price: (+value.price).toFixed(2)}]));
 
+JSON.parse(window.localStorage.getItem('bills')).forEach(([index, { list }])=>{
+
+    if(!Object.values(list)[0]) localStorage.clear();
+
+})
+
 const App = () => {
 
     const GET_PRODUCT = JSON.parse(window.localStorage.getItem('products'));

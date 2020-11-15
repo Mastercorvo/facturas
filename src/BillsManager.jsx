@@ -5,13 +5,11 @@ import Bill from './bill';
 import { useEffect, useState } from 'react';
 import { InputSup } from './global/elements';
 
-function BillsHistoryListItem({bill: [index, value], printHandler}){
+function BillsHistoryListItem({bill:[index, value], printHandler}){
 
-    const { list, total, userName, userCard, time } = value 
+    const { list, total, userName, userCard, time } = value
 
-    const listResult = [...list].map(([index, {props}]) => {
-
-        const { product, count } = props;
+    const listResult = Object.values(list).map(({ product, count }) => {
 
         const subTotal = product.price * count;
 
@@ -20,7 +18,7 @@ function BillsHistoryListItem({bill: [index, value], printHandler}){
         return (
         <div className="product" key={product.name}>
 
-            <p>{product.code} - {index} {product.price} ({count})</p>
+            <p>{product.code} - {product.name} - {product.price} Bs. ({count})</p>
             <p><strong>{total} Bs.</strong></p>
 
         </div>)
@@ -30,7 +28,19 @@ function BillsHistoryListItem({bill: [index, value], printHandler}){
     return (
     <div className="bill" key={index}>
 
-        <div className="print" onClick={()=>printHandler({...value, billHistoryCount: index})}></div>
+        <div className="print" onClick={()=>{
+
+            const result = {}
+
+            for(let index in list){
+
+                result[index] = {props:list[index]}
+
+            }
+
+            printHandler({...{...value, list: result}, billHistoryCount: index})
+    
+        }}></div>
 
         <div className="top">
 
@@ -50,7 +60,7 @@ function BillsHistoryListItem({bill: [index, value], printHandler}){
         <div className="bottom">
 
             <p>Total:</p>
-            <p><strong>{(total + ((total*16)/100)).toFixed(2)}</strong></p>
+            <p><strong>{(total + ((total*16)/100)).toFixed(2)} Bs.</strong></p>
 
         </div>
 
@@ -72,6 +82,8 @@ function BillsManger({zone, bills}){
     },[bills])
 
     function printHandler(data){
+
+        console.log(data);
 
         setBillData(data);
         setPrint(true);

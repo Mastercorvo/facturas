@@ -9,9 +9,9 @@ function BillsListItem({revertHandler, product, setList, count, setTotal}){
 
         setList(list => {
 
-            list.delete(product.name)
+            delete list[product.name]
 
-            return new Map(list);
+            return {...list};
         
         });
 
@@ -40,7 +40,7 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
     const [code, setCode] = useState('');
     const [count, setCount] = useState(1);
     const [total, setTotal] = useState(0);
-    const [list, setList] = useState(new Map());
+    const [list, setList] = useState({});
     const [userCard, setUserCard] = useState('');
     const [userName, setUserName] = useState('');
     const [alertCount, setAlertCount] = useState(false);
@@ -112,7 +112,6 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
         const BILL_GENERATOR = (count) => <BillsListItem 
         product={product} 
         setList={setList} 
-        list={list} 
         count={count} 
         key={product.name}
         revertHandler={revertHandler}
@@ -120,15 +119,23 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
         updateCount(countResult)
 
-        let findProduct = list.get(product.name)
+        let findProduct = list[product.name]
 
         if(findProduct){
 
             const { props: { count: COUNT } } = findProduct
 
-            setList(list => new Map(list.set(product.name, BILL_GENERATOR(+COUNT + +count))))
+            setList(list =>{ 
+
+                return {[product.name]: BILL_GENERATOR(+COUNT + +count), ...list}
+            
+            })
         
-        }else setList(list => new Map([[product.name, BILL_GENERATOR(count)], ...list]));
+        }else setList(list =>{
+            
+            return {[product.name]: BILL_GENERATOR(count), ...list}
+        
+        });
 
         setTotal(value=> value + (product.price * count));
 
@@ -168,7 +175,7 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
     function factureHandler(){
 
         if(!userCard || !userName) return false;
-        if(![...list][0]) return false;
+        if(!Object.values(list)[0]) return false;
         
         setPrint(true)
 
@@ -187,14 +194,14 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
     }
 
     function RESET(revert = true){
-
+        
         setAlertCount(false);
-        revert && [...list].forEach(([index, { props: { count, product } }])=>{
-
-            revertHandler(count, product.code)
+        revert && Object.values(list).forEach(({ props: { count, product } })=>{
+            
+            revertHandler(count, product.code);
 
         })
-        setList(new Map());
+        setList({});
         setCode('');
         setCount('');
         setUserCard('');
@@ -207,12 +214,20 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
 
     function facture(){
 
+        const result = {}
+
+        for(let index in list ){
+
+            result[index] = list[index].props;
+
+        }
+
         setBillsHistoryCount(count=>++count);
 
         setBills(bills=>{
 
             return new Map([[billHistoryCount,{
-                list,
+                list: result,
                 total,
                 userName,
                 userCard,
@@ -299,7 +314,7 @@ function FactureManager({zone, products, setProducts, setBills, setBillsHistoryC
                 <div className="history">
             
                     <h2>Historial</h2>
-                    <div className="view">{[...list.values()]}</div>
+                    <div className="view">{Object.values(list)}</div>
             
                 </div>
 

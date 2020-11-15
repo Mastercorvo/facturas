@@ -10,6 +10,17 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
     const [activateModal, setActivateModal] = useState(false)
     const [oldProduct, setOldProduct] = useState(PRODUCT);
 
+    useEffect(()=>{
+
+        setProduct(product=>{
+
+            return {...(products.get(PRODUCT.code) || products.get(product.code)), code: CODE}
+
+        })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [products])
+
     const editHandler = () => setEdit(value=>!value);
 
     // La primera vez que se agrega un elemento viene con los campos
@@ -208,13 +219,12 @@ function ProductItem({ product: PRODUCT , setProducts, products, code: CODE }){
 
         <InputSup
             disabled={edit} 
-            value={edit?(+product.price).toFixed(2):product.price + (edit?' Bs.':'')} 
+            value={(edit?(+product.price).toFixed(2):product.price) + (edit?' Bs.':'')} 
             onChange={inputPriceHandler} />
-
 
         <InputSup
             disabled={edit} 
-            value={product.count} 
+            value={product.count}
             onChange={inputCountHandler}/>
 
         <button className="edit" onClick={editHandler} hidden={!edit}>Editar</button>
@@ -381,12 +391,6 @@ function ProductManager ({ zone, products, setProducts }){
 
     }
 
-    function prueba(){
-
-        console.log(products);
-
-    }
-
     if(zone !== 1) return false;
 
     return (
@@ -395,8 +399,7 @@ function ProductManager ({ zone, products, setProducts }){
             <div className="main-control">
                 <div className="input-container">
                     <div className="lupa"></div>
-                    <input type="text" placeholder="Buscar por Nombre o Código..." onKeyDown={searchHandler} 
-                    onClick={prueba}/>
+                    <input type="text" placeholder="Buscar por Nombre o Código..." onKeyDown={searchHandler}/>
                 </div>
                 <button onClick={addHandler}>
                     <div className="plus"></div>
@@ -416,7 +419,7 @@ function ProductManager ({ zone, products, setProducts }){
                 <div className="list-items">
                 {
 
-                    [...viewProducts].map(([index,value])=><ProductItem product={value} setProducts={updateHandler} products={viewProducts} key={index} code={index} />)
+                    [...viewProducts].map(([index,value])=><ProductItem product={value} setProducts={updateHandler} products={products} key={index} code={index} />)
 
                 }
                 </div>
