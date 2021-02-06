@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import './app.css';
+import './App.css';
 
 import Header from './Header';
 import ProductManager from './ProductManages';
 import FactureManager from './FactureManager';
-import BillsManager from './billsManager';
+import BillsManager from './BillsManager';
 import Login from './Login';
 
 let PRODUCTS = new Map([
@@ -15,7 +15,7 @@ let PRODUCTS = new Map([
 
 ].map(([index, value])=>[index, {...value, price: (+value.price).toFixed(2)}]));
 
-JSON.parse(window.localStorage.getItem('bills')).forEach(([index, { list }])=>{
+JSON.parse(window.localStorage.getItem('bills') || "[]").forEach(([index, { list }])=>{
 
     if(!Object.values(list)[0]) localStorage.clear();
 

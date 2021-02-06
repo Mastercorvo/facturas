@@ -8,20 +8,18 @@
   "description": "Sistema de facturacion",
   "dependencies": {},
   "main": "public/electron.js",
-  "build":{
+  "build": {
     "appId": "Sistema de Facturacion",
     "productName": "Sistema de Facturacion",
-    "win":{
-      
-      "target":[
-
+    "electronVersion": "11.2.3",
+    "win": {
+      "target": [
         {
-          "target":"NSIS",
-          "arch":"ia32"
+          "target": "NSIS",
+          "arch": "ia32"
         }
-
       ],
-      "icon":"public/fas.ico"
+      "icon": "public/fas.ico"
     }
   },
   "scripts": {
@@ -52,7 +50,6 @@
     ]
   },
   "devDependencies": {
-    "electron": "^10.1.5",
     "electron-builder": "^22.9.1",
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",
